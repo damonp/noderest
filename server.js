@@ -49,6 +49,8 @@ router.route('/servers')
       server.name = req.body.name;  // set the servers name (comes from the request)
       server.os = req.body.os;
       server.ip = req.body.ip;
+      var tags = req.body.tags.split(" ");
+      server.tags = tags;
 
       // save the server and check for errors
       server.save(function(err) {
@@ -94,6 +96,8 @@ router.route('/servers/:server_id')
       server.name = req.body.name;  // update the servers info
       server.os = req.body.os;
       server.ip = req.body.ip;
+      var tags = req.body.tags.split(" ");
+      server.tags = tags;
 
       // save the server
       server.save(function(err) {
