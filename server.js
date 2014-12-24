@@ -52,6 +52,12 @@ router.route('/servers')
       var tags = req.body.tags.split(" ");
       server.tags = tags;
 
+      process.env.TZ='America/Chicago';
+      //process.env.TZ='UTC';
+      //var offset = (new Date().getTimezoneOffset() / 60 * -1.0);
+      //server.last_update = Date.now() + (offset * 3600000);
+      server.last_update = Date.now() + (-6 * 3600000);
+
       // save the server and check for errors
       server.save(function(err) {
           if (err)
@@ -98,6 +104,12 @@ router.route('/servers/:server_id')
       server.ip = req.body.ip;
       var tags = req.body.tags.split(" ");
       server.tags = tags;
+
+      process.env.TZ='America/Chicago';
+      //process.env.TZ='UTC';
+      //var offset = (new Date().getTimezoneOffset() / 60 * -1.0);
+      //server.last_update = Date.now() + (offset * 3600000);
+      server.last_update = Date.now() + (-6 * 3600000);
 
       // save the server
       server.save(function(err) {

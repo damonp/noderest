@@ -7,7 +7,8 @@ var ServerSchema   = new Schema({
     name: String,
     os: String,
     ip: String,
-    tags: [String]
+    tags: [String],
+    last_update: Date
 });
 
 module.exports = mongoose.model('Server', ServerSchema);
