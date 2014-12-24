@@ -33,7 +33,7 @@ router.use(function(req, res, next) {
 
 // test route to make sure everything is working (accessed at GET http://localhost:4242/api)
 router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to the magic.' });   
+    res.json(200, { message: 'hooray! welcome to the magic.' });   
 });
 
 // more routes for our API will happen here
@@ -60,20 +60,25 @@ router.route('/servers')
 
       // save the server and check for errors
       server.save(function(err) {
-          if (err)
-              res.send(err);
+          if (err)  {
+            console.log(err);
+            return res.send(err);
+          }
 
-          res.json({ message: 'Server created' });
+          //res.json({ message: 'Server created' });
+          res.send(200, server)
       });        
   })
 
   // get all the servers (accessed at GET http://localhost:4242/api/servers)
   .get(function(req, res) {
       Server.find(function(err, servers) {
-          if (err)
-              res.send(err);
+          if (err)  {
+            console.log(err);
+            return res.send(err);
+          }
 
-          res.json(servers);
+          res.json(200, servers);
       });    
    });
 
@@ -84,20 +89,25 @@ router.route('/servers/:server_id')
   // get the server with that id (accessed at GET http://localhost:4242/api/servers/:server_id)
   .get(function(req, res) {
       Server.findById(req.params.server_id, function(err, server) {
-          if (err)
-              res.send(err);
-          res.json(server);
+          if (err)  {
+            console.log(err);
+            return res.send(err);
+          }
+
+          res.json(200, server);
       });
   })        
 
   // update the server with this id (accessed at PUT http://localhost:4242/api/servers/:server_id)
   .put(function(req, res) {
 
-      // use our server model to find the server we want
-      Server.findById(req.params.server_id, function(err, server) {
+    // use our server model to find the server we want
+    Server.findById(req.params.server_id, function(err, server) {
 
-      if (err)
-        return res.send(err);
+      if (err)  {
+        console.log(err);
+        return res.send(404, err);
+      }
 
       server.name = req.body.name;  // update the servers info
       server.os = req.body.os;
@@ -113,10 +123,13 @@ router.route('/servers/:server_id')
 
       // save the server
       server.save(function(err) {
-      if (err)
-        return res.send(err);
+        if (err)  {
+          console.log(err);
+          return res.send(404, err);
+        }
 
-        res.json({ message: 'Server updated' });
+        //res.json({ message: 'Server updated' });
+        res.send(201, server)        
       });
   })
 
@@ -124,16 +137,69 @@ router.route('/servers/:server_id')
   .delete(function(req, res) {
     console.log(req.params);
     console.log('_id: '+req.params.server_id);
+
+
+    //Server.remove(req.params.server_id, function(err, docs) {
+    Server.findById(req.params.server_id, function(err, server) {
+      if (err)  {
+        console.log(err);
+        return res.send(400, err);
+      }
+
+      if(!server) {
+        return res.json(404, { message: 'Not Found' }); 
+      }
+
+      server.remove(server._id, function(err, docs) {
+        if (err)  {
+          console.log(err);
+          return res.send(404, err);
+        }
+      });
+
+      res.json(200, { message: 'Server deleted' });
+      //res.send(204);
+    });
+
+/*
     Server.remove({
       _id: req.params.server_id
       }, function(err, server) {
-        if (err)
+        if (err)  {
+          console.log(err);
           return res.send(err);
+        }
 
-        res.json({ message: 'Server deleted' });
+        res.json(200, { message: 'Server deleted' });
       });
+*/  
     })
   }); 
+
+ router.post('/servers/:server_id/delete', function(req, res) {
+    console.log(req.params);
+    //Server.remove(req.params.server_id, function(err, docs) {
+    Server.findById(req.params.server_id, function(err, server) {
+      if (err)  {
+        console.log(err);
+        return res.send(400, err);
+      }
+
+      if(!server) {
+        return res.json(404, { message: 'Not Found' }); 
+      }
+
+      server.remove(server._id, function(err, docs) {
+        if (err)  {
+          console.log(err);
+          return res.send(404, err);
+        }
+      });
+
+      res.json(200, { message: 'Server deleted' });
+      //res.send(204);
+    });
+});
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
