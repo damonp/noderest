@@ -97,7 +97,7 @@ router.route('/servers/:server_id')
       Server.findById(req.params.server_id, function(err, server) {
 
       if (err)
-        res.send(err);
+        return res.send(err);
 
       server.name = req.body.name;  // update the servers info
       server.os = req.body.os;
@@ -114,7 +114,7 @@ router.route('/servers/:server_id')
       // save the server
       server.save(function(err) {
       if (err)
-        res.send(err);
+        return res.send(err);
 
         res.json({ message: 'Server updated' });
       });
@@ -122,11 +122,13 @@ router.route('/servers/:server_id')
 
   // delete the server with this id (accessed at DELETE http://localhost:4242/api/servers/:server_id)
   .delete(function(req, res) {
+    console.log(req.params);
+    console.log('_id: '+req.params.server_id);
     Server.remove({
       _id: req.params.server_id
       }, function(err, server) {
         if (err)
-          res.send(err);
+          return res.send(err);
 
         res.json({ message: 'Server deleted' });
       });
