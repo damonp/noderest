@@ -31,7 +31,7 @@ router.use(function(req, res, next) {
     next(); // make sure we go to the next routes and don't stop here
 });
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+// test route to make sure everything is working (accessed at GET http://localhost:4242/api)
 router.get('/', function(req, res) {
     res.json({ message: 'hooray! welcome to the magic.' });   
 });
@@ -42,7 +42,7 @@ router.get('/', function(req, res) {
 // ----------------------------------------------------
 router.route('/servers')
 
-  // create a server (accessed at POST http://localhost:8080/api/servers)
+  // create a server (accessed at POST http://localhost:4242/api/servers)
   .post(function(req, res) {
       
       var server = new Server();      // create a new instance of the Server model
@@ -67,7 +67,7 @@ router.route('/servers')
       });        
   })
 
-  // get all the servers (accessed at GET http://localhost:8080/api/servers)
+  // get all the servers (accessed at GET http://localhost:4242/api/servers)
   .get(function(req, res) {
       Server.find(function(err, servers) {
           if (err)
@@ -81,7 +81,7 @@ router.route('/servers')
 // ----------------------------------------------------
 router.route('/servers/:server_id')
 
-  // get the server with that id (accessed at GET http://localhost:8080/api/servers/:server_id)
+  // get the server with that id (accessed at GET http://localhost:4242/api/servers/:server_id)
   .get(function(req, res) {
       Server.findById(req.params.server_id, function(err, server) {
           if (err)
@@ -90,7 +90,7 @@ router.route('/servers/:server_id')
       });
   })        
 
-  // update the server with this id (accessed at PUT http://localhost:8080/api/servers/:server_id)
+  // update the server with this id (accessed at PUT http://localhost:4242/api/servers/:server_id)
   .put(function(req, res) {
 
       // use our server model to find the server we want
@@ -120,7 +120,7 @@ router.route('/servers/:server_id')
       });
   })
 
-  // delete the server with this id (accessed at DELETE http://localhost:8080/api/servers/:server_id)
+  // delete the server with this id (accessed at DELETE http://localhost:4242/api/servers/:server_id)
   .delete(function(req, res) {
     Server.remove({
       _id: req.params.server_id
