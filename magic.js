@@ -66,8 +66,8 @@ router.route('/servers')
           }
 
           console.log(server)
-          //res.json({ message: 'Server created' });
-          res.send(200, server)
+          res.json(200, { message: 'Server created', server: server });
+          //res.send(200, server)
       });        
   })
 
@@ -108,7 +108,7 @@ router.route('/servers/:server_id')
 
       if (err)  {
         console.log(err);
-        return res.send(400, err);
+        return res.send(500, err);
       }
 
       if(!server) {
@@ -135,8 +135,8 @@ router.route('/servers/:server_id')
           return res.send(404, err);
         }
 
-        //res.json({ message: 'Server updated' });
-        res.send(201, server)        
+        res.json(204, { message: 'Server updated', server: server });
+        //res.send(201, server)        
       });
   })
 /*
@@ -166,7 +166,7 @@ support for DELETE seems hit or miss
     Server.findById(req.params.server_id, function(err, server) {
       if (err)  {
         console.log(err);
-        return res.send(400, err);
+        return res.send(500, err);
       }
 
       if(!server) {
@@ -176,7 +176,7 @@ support for DELETE seems hit or miss
       server.remove(server._id, function(err, docs) {
         if (err)  {
           console.log(err);
-          return res.send(404, err);
+          return res.send(409, err);
         }
       });
 
@@ -189,11 +189,10 @@ support for DELETE seems hit or miss
   }); 
 
  router.post('/servers/:server_id/delete', function(req, res) {
-    //console.log(req.params);
     Server.findById(req.params.server_id, function(err, server) {
       if (err)  {
         console.log(err);
-        return res.send(400, err);
+        return res.send(500, err);
       }
 
       if(!server) {
@@ -203,7 +202,7 @@ support for DELETE seems hit or miss
       server.remove(server._id, function(err, docs) {
         if (err)  {
           console.log(err);
-          return res.send(404, err);
+          return res.send(409, err);
         }
       });
 
@@ -217,9 +216,12 @@ support for DELETE seems hit or miss
 // all of our routes will be prefixed with /api
 app.use('/api', router);
 
+app.use(express.static(__dirname + '/pages'));
+//app.use('/pages', express.static(__dirname + '/pages'));
+
 // START THE SERVER
 // =============================================================================
 app.listen(port);
-console.log('magic on port ' + port);
+console.log('magic.js:' + port + ' l i s t e n i n g . . . ');
 
 
